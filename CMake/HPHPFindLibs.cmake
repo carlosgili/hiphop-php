@@ -261,8 +261,8 @@ include_directories(${CCLIENT_INCLUDE_PATH})
 
 CONTAINS_STRING("${CCLIENT_INCLUDE_PATH}/utf8.h" U8T_DECOMPOSE RECENT_CCLIENT)
 if (NOT RECENT_CCLIENT)
-	unset(RECENT_CCLIENT CACHE)
-	message(FATAL_ERROR "Your version of c-client is too old, you need 2007")
+	add_definitions(-DHAVE_OLD_CCLIENT_VERSION=1)
+	message(STATUS "Please consider updating your CClient version to 2007.")
 endif()
 
 CONTAINS_STRING("${CCLIENT_INCLUDE_PATH}/linkage.h" auth_gss CCLIENT_NEEDS_PAM)

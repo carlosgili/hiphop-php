@@ -25,6 +25,7 @@
 #define namespace namespace_
 #include <imap4r1.h>  /* location of c-client quota functions */
 #undef namespace
+#include <utf8.h>
 
 using namespace std;
 
@@ -1692,7 +1693,11 @@ Variant f_imap_utf8(CStrRef mime_encoded_text) {
   dest.size = 0;
 
   cpytxt(&src, (char *)mime_encoded_text.data(), mime_encoded_text.length());
+#if HAVE_OLD_CCLIENT_VERSION
+  utf8_mime2text(&src, &dest);
+#else
   utf8_mime2text(&src, &dest, U8T_DECOMPOSE);
+#endif
 
   if (src.data && src.data != dest.data) {
     free(src.data);
