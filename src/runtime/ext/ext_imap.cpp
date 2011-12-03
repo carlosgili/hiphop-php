@@ -25,7 +25,9 @@
 #define namespace namespace_
 #include <imap4r1.h>  /* location of c-client quota functions */
 #undef namespace
+extern "C" {
 #include <utf8.h>
+}
 
 using namespace std;
 

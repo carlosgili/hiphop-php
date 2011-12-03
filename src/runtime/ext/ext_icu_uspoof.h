@@ -27,8 +27,10 @@
 #define U_USING_ICU_NAMESPACE 0
 #endif
 
+#if !HAVE_OLD_LIBICU
 #include "unicode/uspoof.h"
 #include "unicode/utypes.h"
+#endif
 namespace HPHP {
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -68,8 +70,9 @@ class c_SpoofChecker : public ExtObjectData {
   public: c_SpoofChecker *create();
   static const ClassPropTable os_prop_table;
 
-
+#if !HAVE_OLD_LIBICU
   private: USpoofChecker *m_spoof_checker;
+#endif
 };
 
 ///////////////////////////////////////////////////////////////////////////////

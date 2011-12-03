@@ -33,7 +33,15 @@ const int q_SpoofChecker$$ANY_CASE = USPOOF_ANY_CASE;
 const int q_SpoofChecker$$SINGLE_SCRIPT = USPOOF_SINGLE_SCRIPT;
 const int q_SpoofChecker$$INVISIBLE = USPOOF_INVISIBLE;
 const int q_SpoofChecker$$CHAR_LIMIT = USPOOF_CHAR_LIMIT;
-#endif !HAVE_OLD_LIBICU
+#else
+const int q_SpoofChecker$$SINGLE_SCRIPT_CONFUSABLE = 0;
+const int q_SpoofChecker$$MIXED_SCRIPT_CONFUSABLE = 0;
+const int q_SpoofChecker$$WHOLE_SCRIPT_CONFUSABLE = 0;
+const int q_SpoofChecker$$ANY_CASE = 0;
+const int q_SpoofChecker$$SINGLE_SCRIPT = 0;
+const int q_SpoofChecker$$INVISIBLE = 0;
+const int q_SpoofChecker$$CHAR_LIMIT = 0;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 c_SpoofChecker::c_SpoofChecker(const ObjectStaticCallbacks *cb) :
@@ -96,10 +104,10 @@ bool c_SpoofChecker::t_issuspicious(CStrRef text, VRefParam issuesFound) {
 }
 
 bool c_SpoofChecker::t_areconfusable(
-#if !HAVE_OLD_LIBICU
   CStrRef s1,
   CStrRef s2,
   VRefParam issuesFound) {
+#if !HAVE_OLD_LIBICU
   INSTANCE_METHOD_INJECTION_BUILTIN(SpoofChecker, SpoofChecker::areconfusable);
   UErrorCode status = U_ZERO_ERROR;
   int32_t ret = uspoof_areConfusableUTF8(
