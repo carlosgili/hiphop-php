@@ -713,6 +713,7 @@ static Variant mysql_makevalue(CStrRef data, MYSQL_FIELD *mysql_field) {
   return data;
 }
 
+#if HAVE_MYSQL_LOCALIZATION_SUPPORT
 extern "C" {
 struct MEM_ROOT;
 unsigned long cli_safe_read(MYSQL *);
@@ -787,6 +788,7 @@ static Variant php_mysql_localize_result(MYSQL *mysql) {
 
   return result;
 }
+#endif
 
 static Variant php_mysql_do_query_general(CStrRef query, CVarRef link_id,
                                           bool use_store) {
@@ -909,7 +911,12 @@ static Variant php_mysql_do_query_general(CStrRef query, CVarRef link_id,
   MYSQL_RES *mysql_result;
   if (use_store) {
     if (RuntimeOption::MySQLLocalize) {
+#if HAVE_MYSQL_LOCALIZATION_SUPPORT
       return php_mysql_localize_result(conn);
+#else
+      // TODO: implement a fallback solution
+      raise_warning("Not built with mysql localization support.");
+#endif
     }
     mysql_result = mysql_store_result(conn);
   } else {
