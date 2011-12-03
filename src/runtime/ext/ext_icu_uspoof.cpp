@@ -22,6 +22,7 @@ namespace HPHP {
 IMPLEMENT_DEFAULT_EXTENSION(icu_uspoof);
 ///////////////////////////////////////////////////////////////////////////////
 
+#if !HAVE_OLD_LIBICU
 const int q_SpoofChecker$$SINGLE_SCRIPT_CONFUSABLE =
   USPOOF_SINGLE_SCRIPT_CONFUSABLE;
 const int q_SpoofChecker$$MIXED_SCRIPT_CONFUSABLE =
@@ -32,10 +33,12 @@ const int q_SpoofChecker$$ANY_CASE = USPOOF_ANY_CASE;
 const int q_SpoofChecker$$SINGLE_SCRIPT = USPOOF_SINGLE_SCRIPT;
 const int q_SpoofChecker$$INVISIBLE = USPOOF_INVISIBLE;
 const int q_SpoofChecker$$CHAR_LIMIT = USPOOF_CHAR_LIMIT;
+#endif !HAVE_OLD_LIBICU
 
 ///////////////////////////////////////////////////////////////////////////////
 c_SpoofChecker::c_SpoofChecker(const ObjectStaticCallbacks *cb) :
     ExtObjectData(cb) {
+#if !HAVE_OLD_LIBICU
   UErrorCode status = U_ZERO_ERROR;
   m_spoof_checker = uspoof_open(&status);
 
@@ -57,16 +60,20 @@ c_SpoofChecker::c_SpoofChecker(const ObjectStaticCallbacks *cb) :
     throw Exception("Could not open spoof checker, error %d (%s)",
                     status, u_errorName(status));
   }
+#endif
 }
 
 c_SpoofChecker::~c_SpoofChecker() {
+#if !HAVE_OLD_LIBICU
   uspoof_close(m_spoof_checker);
+#endif
 }
 
 void c_SpoofChecker::t___construct() {
 }
 
 bool c_SpoofChecker::t_issuspicious(CStrRef text, VRefParam issuesFound) {
+#if !HAVE_OLD_LIBICU
   INSTANCE_METHOD_INJECTION_BUILTIN(SpoofChecker, SpoofChecker::issuspicious);
   UErrorCode status = U_ZERO_ERROR;
   int32_t ret = uspoof_checkUTF8(
@@ -82,9 +89,14 @@ bool c_SpoofChecker::t_issuspicious(CStrRef text, VRefParam issuesFound) {
   }
   issuesFound = ret;
   return ret != 0;
+#else
+  throw NotImplementedException(__func__);
+  return true;
+#endif
 }
 
 bool c_SpoofChecker::t_areconfusable(
+#if !HAVE_OLD_LIBICU
   CStrRef s1,
   CStrRef s2,
   VRefParam issuesFound) {
@@ -104,9 +116,14 @@ bool c_SpoofChecker::t_areconfusable(
   }
   issuesFound = ret;
   return ret != 0;
+#else
+  throw NotImplementedException(__func__);
+  return true;
+#endif
 }
 
 void c_SpoofChecker::t_setallowedlocales(CStrRef localesList) {
+#if !HAVE_OLD_LIBICU
   INSTANCE_METHOD_INJECTION_BUILTIN(SpoofChecker, SpoofChecker::setallowedlocales);
   UErrorCode status = U_ZERO_ERROR;
   uspoof_setAllowedLocales(
@@ -118,9 +135,13 @@ void c_SpoofChecker::t_setallowedlocales(CStrRef localesList) {
       "Could not set allowed locales to [%s], error %d (%s)",
       localesList.c_str(), status, u_errorName(status));
   }
+#else
+  throw NotImplementedException(__func__);
+#endif
 }
 
 void c_SpoofChecker::t_setchecks(int checks) {
+#if !HAVE_OLD_LIBICU
   INSTANCE_METHOD_INJECTION_BUILTIN(SpoofChecker, SpoofChecker::setchecks);
   UErrorCode status = U_ZERO_ERROR;
   uspoof_setChecks(
@@ -132,6 +153,9 @@ void c_SpoofChecker::t_setchecks(int checks) {
       "Could not set spoof checks to %d, error %d (%s)",
       checks, status, u_errorName(status));
   }
+#else
+  throw NotImplementedException(__func__);
+#endif
 }
 
 Variant c_SpoofChecker::t___destruct() {

@@ -184,6 +184,9 @@ String c_EncodingMatch::t_getlanguage() {
   return String(language);
 }
 
+// see ext_icu.cpp
+std::string icuStringToUTF8(const icu::UnicodeString& ustr);
+
 String c_EncodingMatch::t_getutf8() {
   INSTANCE_METHOD_INJECTION_BUILTIN(EncodingMatch, EncodingMatch::getutf8);
   validate();
@@ -209,8 +212,12 @@ String c_EncodingMatch::t_getutf8() {
       "Could not get UTF-8 for match, error %d (%s)",
       status, u_errorName(status));
   }
+#if HAVE_OLD_LIBICU
+  std::string utf8str (icuStringToUTF8(ustr));
+#else
   std::string utf8str;
   ustr.toUTF8String(utf8str);
+#endif
   return String(utf8str);
 }
 
