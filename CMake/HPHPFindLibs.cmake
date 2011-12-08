@@ -402,6 +402,4 @@ endif()
 		target_link_libraries(${target} ${PAM_LIBRARY})
 	endif()
 
-        set_target_properties(${target} PROPERTIES LINK_FLAGS "-Wl,--as-needed")
-
 endmacro()
