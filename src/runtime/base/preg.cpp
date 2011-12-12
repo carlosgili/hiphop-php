@@ -81,8 +81,6 @@ typedef hphp_hash_map<StringData *, pcre_cache_entry*,
 // TODO LRU cache
 class PCRECache {
 public:
-  ~PCRECache() { }
-
   void cleanup() {
     TAINT_OBSERVER_CAP_STACK();
     for (PCREStringMap::iterator it = m_cache.begin(); it != m_cache.end();
@@ -92,6 +90,10 @@ public:
         delete it->first;
       }
     }
+  }
+
+  ~PCRECache() {
+    cleanup();
   }
 
   pcre_cache_entry *find(CStrRef regex) {
