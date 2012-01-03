@@ -18,7 +18,14 @@
 #define __HTTP_SERVER_LIB_EVENT_TRANSPORT_H__
 
 #include <runtime/base/server/transport.h>
+#ifdef HPHP_HAVE_LIBEVENT2
+#include <event.h>
+#include <event2/http.h>
+#include <event2/http_struct.h>
+#include <event2/http_compat.h>
+#else
 #include <evhttp.h>
+#endif
 
 namespace HPHP {
 ///////////////////////////////////////////////////////////////////////////////

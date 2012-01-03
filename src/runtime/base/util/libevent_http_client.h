@@ -20,7 +20,14 @@
 #include <util/base.h>
 #include <util/async_func.h>
 #include <util/lock.h>
+#ifdef HPHP_HAVE_LIBEVENT2
+#include <event.h>
+#include <event2/http.h>
+#include <event2/http_struct.h>
+#include <event2/http_compat.h>
+#else
 #include <evhttp.h>
+#endif
 
 namespace HPHP {
 ///////////////////////////////////////////////////////////////////////////////

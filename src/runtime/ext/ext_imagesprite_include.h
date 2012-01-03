@@ -19,7 +19,14 @@
 #define __EXT_IMAGESPRITE_INCLUDE_H__
 
 #include <runtime/base/base_includes.h>
+#ifdef HPHP_HAVE_LIBEVENT2
+#include <event.h>
+#include <event2/http.h>
+#include <event2/http_struct.h>
+#include <event2/http_compat.h>
+#else
 #include <evhttp.h>
+#endif
 #include <gd.h>
 
 namespace HPHP {
